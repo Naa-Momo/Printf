@@ -1,45 +1,115 @@
+#include <unistd.h>
+#include <stdarg.h>
 #include "main.h"
 /**
- * _printf - is a function that selects the correct function to print.
- * @format: identifier to look for.
- * Return: the length of the string.
- */
-int _printf(const char * const format, ...)
+ * _putchar - writes the character c to stdout
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ * On error, -1 is returned, and errno is set appropriately.
+*/
+
+int _putchar(char c)
 {
-	convert_match m[] = {
-		{"%s", printf_string}, {"%c", printf_char},
-		{"%%", printf_37},
-		{"%i", printf_int}, {"%d", printf_dec}, {"%r", printf_srev},
-		{"%R", printf_rot13}, {"%b", printf_bin}, {"%u", printf_unsigned},
-		{"%o", printf_oct}, {"%x", printf_hex}, {"%X", printf_HEX},
-		{"%S", printf_exclusive_string}, {"%p", printf_pointer}
-	};
+	return (write(1, &c, 1));
+}
 
-	va_list args;
-	int i = 0, j, len = 0;
+/**
+ * print_string - prints an array of string characters
+ * @str: the variable to print
+ *
+ */
 
-	va_start(args, format);
-	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
-		return (-1);
+int print_string(char *str)
+{
+	int i = 0;
 
-Here:
-	while (format[i] != '\0')
+	while (str[i] != '\0')
 	{
-		j = 13;
-		while (j >= 0)
-		{
-			if (m[j].id[0] == format[i] && m[j].id[1] == format[i + 1])
-			{
-				len += m[j].f(args);
-				i = i + 2;
-				goto Here;
-			}
-			j--;
-		}
-		_putchar(format[i]);
-		len++;
+		_putchar(str[i]);
 		i++;
 	}
-	va_end(args);
-	return (len);
+	return (i);
+}
+#include <limits.h>
+#include <stdio.h>
+
+/**
+ * _printf - Produces output according to a format
+ * @format: The format of the string.
+ * Return: The number of characters printed
+ * _printf - produces output according to a format
+ * @format: format string containing the characters and the specifiers
+ * Description: this function will call the get_print() function that will
+ * determine which printing function to call depending on the conversion
+ * specifiers contained into fmt
+ * Return: length of the formatted output string
+ */
+int _printf(const char *format, ...)
+{
+	va_list ap;
+	unsigned int j = 0, n = 0;
+
+	va_start(ap, format);
+	while (format[j] != '\0')
+	int (*pfunc)(va_list, flags_t *);
+	const char *p;
+	va_list arguments;
+	flags_t flags = {0, 0, 0};
+
+	register int count = 0;
+
+	va_start(arguments, format);
+	if (!format || (format[0] == '%' && !format[1]))
+		return (-1);
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = format; *p; p++)
+	{
+		if (format[j] == '%')
+		if (*p == '%')
+		{
+			switch (format[j + 1])
+			p++;
+			if (*p == '%')
+			{
+				case 'c':
+					_putchar(va_arg(ap, int));
+					n++;
+					break;
+				case 's':
+					n += print_string(va_arg(ap, char *));
+
+					break;
+				case '%':
+					_putchar('%');
+					n++;
+					break;
+				count += _putchar('%');
+				continue;
+			}
+
+			j++;
+		}
+		else
+		{
+			_putchar(format[j]);
+			n++;
+		}
+		j++;
+			while (get_flag(*p, &flags))
+				p++;
+			pfunc = get_print(*p);
+			count += (pfunc)
+				? pfunc(arguments, &flags)
+				: _printf("%%%c", *p);
+		} else
+			count += _putchar(*p);
+	}
+	va_end(ap);
+	return (n);
+	_putchar(-1);
+	va_end(arguments);
+	return (count);
+
 }
